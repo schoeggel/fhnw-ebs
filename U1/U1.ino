@@ -1,3 +1,7 @@
+#include <LiquidCrystal_I2C.h>
+#include <Wire.h> 
+LiquidCrystal_I2C lcd(0x20,16,2);
+
 #include <Adafruit_NeoPixel.h>
 
 #define PIN 10
@@ -12,6 +16,9 @@ Serial.println("Hallo");
 strip.begin();
 strip.show(); // Initialize all pixels to 'off'
 time = millis()+1000;
+lcd.init();// initialize the lcd 
+lcd.init();
+lcd.backlight();
 }
 
 void loop() {
@@ -21,10 +28,16 @@ if(time<=millis()){
   if(ledon){
     colorWipe(strip.Color(0, 0, 0), 50);
     ledon = false;
+    lcd.clear();
+    lcd.setCursor(4,1);
+    lcd.print("LED aus");
   }
   else{
    colorWipe(strip.Color(0, 20, 0), 50); // Green
-   ledon = true; 
+   ledon = true;
+   lcd.clear();
+   lcd.setCursor(4,0);
+   lcd.print("LED an"); 
   }
 }
 
