@@ -1,20 +1,45 @@
 // Phasen Informationen definieren:
 
+typedef enum {
+  RotGelb,
+  Gruen,
+  Gelb,
+  Rot,  
+  Weiss
+}  Ampelfarben ;
+
+typedef struct {
+   int R;
+   int G;
+   int B;
+} RGBcolor;
+
+// Farbkombinationen erstellen, Farbwerte zuordnen
+RGBcolor farbe[5] = {  
+  {255, 128,  0   },
+  {0,   128,  0   },
+  {128, 128,  0   },
+  {255, 0,    0   },
+  {255, 255,  255 }
+};
+
+
 typedef struct  {
    char text[16];
    int seconds;
-   int cR;
-   int cG;
-   int cB;
+   RGBcolor rgb1;   // Farbe der aktiven Seite
+   RGBcolor rgb2;   // Farbe der passiven Seite  --> weglassen ist immer ROT!
 } Phase;
 
+
+
 Phase p[6] = {
-  {"Rot-Gelb",  2,  255,  128,  0   },
-  {"Grün",      15, 0,    128,  0   },
-  {"Gelb",      5,  128,  128,  0   },
-  {"Rot-Sperr", 2,  255,  0,    0   },
-  {"Rot",       -1, 255,  0,    0   },
-  {"TEST",      2,  255,  255,  255 },
+  {"Rot-Gelb",  2,  farbe[RotGelb]},
+  {"Grün",      15, farbe[Gruen]  },
+  {"Gelb",      5,  farbe[Gelb]   },
+  {"Rot-Sperr", 2,  farbe[Rot]    },
+  {"Rot",       -1, farbe[Rot]    },
+  {"TEST",      2,  farbe[Weiss]  }
 };
 
 
