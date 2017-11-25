@@ -1,0 +1,7 @@
+Der MiniQ verfügt über zwei Helligkeitssensoren, die als als Spannungsteiler angeordnet sind. Dadurch kann über den analogen Eingang das Verhältnis der beiden Helligkeiten zueinander erfasst werden. Wird nun bsps. ein Finger gleichmässig hin- und herbewegt vor den Sensoren, können Grundfrequenz und Amplitude der Bewegung ermittelt werden. 
+
+Während das Programm 1 läuft, leuchten die RGB-LEDs. Dabei ändert der Farbwert laufend und bewegt sich repetitiv auf dem Farbkreis von 0° bis 360°. Die Helligkeit pulsiert dabei mit Frequenz, die aus der Bewegung ermittelt wurde. Eine höhere Amplitude der Bewegung führt zu einem intensiveren Pulsieren.
+
+
+Während das Programm 2 läuft, wird die Frequenz der Bewegung in einen hörbaren Bereich übersetzt und auf dem Lautsprecher als Ton ausgegeben. Die Eingangsfrequenz auf ein Band von 1 Hz bis 10 Hz limitiert und anschliessend auf einen Frequenzbereich von 100 Hz bis 10 kHz übersetzt. 
+  
