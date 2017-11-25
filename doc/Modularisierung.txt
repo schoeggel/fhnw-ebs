@@ -1,0 +1,30 @@
+Die Modularisierung hat zum Ziel, das Projekt in möglichst voneinander unabhängige, verschiedene Funktionsmodule aufzuteilen. Der Gesamtarbeitsumfang teilt sich auf die verschiedenen Module auf, wodurch einzelne Module einfacher zu realisieren sind. Durch eine sinnvolle Aufteilung und erstellen effizienter Schnittstellen wird ebenfalls die Übersichtlichkeit der Lösung verbessert. Weiterhin ist es bei einer entsprechend ausgerichteten Modularisierung möglich, einzelne Module vollständig durch Libraries zu ersetzen. 
+
+
+Module:
+
+LCD
+Die LCD Anzeige wird grösstenteils durch die Arduino-Bibliothek «LiquidCrystal_I2C» abgedeckt. Aufgrund der zeitlichen Vorgaben wird pro Interaktion mit dem Displaycontroller jeweils nur ein Zeichen übermittelt oder der Cursor umpositioniert. Das Modul beinhaltet einen eigenen Speicher, in dem der Soll Display Inhalt abgebildet ist. In regelmässigen Abständen wird durch den Scheduler ein Miniupdate gestartet. Pro Miniupdate wird immer nur ein Zeichen an den Controller gesendet. An bestimmten Stellen erfolgt anstelle der Zeichenübermittlung eine Cursorpositionierung, bspw. vor dem ersten Zeichen. Ein Update des Gesamten LCD auf einmal würde aufgrund der lange dauernden i2c Busaktivität zwischen MC und Displaycontroller länger als 2 ms dauern. Ein Minipdate erfolgt in weniger als 2 ms. Bis der gesamte Display Inhalt (2x16 Zeichen) aktualisiert ist, müssen 34 Miniupdates erfolgen. 
+
+
+Soundmodul
+Das Soundmodul ermöglicht es, dass kontinuierlich ein Ton mit einer gewünschten Frequenz am Lautsprecher ausgegeben wird. Gleichzeitig kann auch ein Tastendruck gemeldet werden. Dabei wird während einer definierte Zeitdauer statt des kontinuierlichen Tons ein Piepston erzeugt. Weil das Soundmodul periodisch über den Scheduler aufgerufen wird, sind die Aufrufintervalle bekannt. Über einen Zähler kann die Dauer des Piepstons kontrolliert werden. Eine erneute Meldung eines Tastendrucks, bevor der vorherige Piepston zu Ende ist, setzt den Zähler wieder zurück und verlängert somit die Gesamtdauer des Piepstons. Ist er beendet, wird wieder der fortlaufende Ton mit der angegebenen Frequenz erzeugt. Die eigentliche Tonerzeugung wird von der Arduinofunktion "tone" übernommen.
+
+
+KeyRead
+Hier wird der analog Eingang der Tester gelesen und anschliessend der ADC Wert in Integerwerte für die entsprechende Taste übersetzt und zurückgemeldet. Mögliche rückgabewerte sind 0 (kein Tastendruck), 1, 2 oder 3. Es findet keine Tastenentprellung statt. Durch die Auslegung der Menustruktur sowie der Tatsache, dass in den Programmen keine Tastendrücke ausser die für das Beenden ausgewertet werden müssen, ergibt sich eine vereinfachte Situation: Eine Taste die in einem der Programmzustände (Menu, Programm 1, Programm 2) gedrückt wird und zu einem Zustandswechsel führt, hat im neuen Zustand keine Funktion. Somit ist eine Entprellung nicht notwendig. 
+
+Scheduler
+Der Scheduler wird über eine ISR periodisch aufgerufen. Der Scheduler besitzt mehrere Jobs. Jeder Job hat einen Divisor und eine Bitmaske. Der Divisor hat die Funktion, den Job nicht jedesmal zu berücksichtigen, sondern nur jedes n-te mal. Damit werden auch grössere Intervalle möglich. Wird der Job berücksichtigt, entscheidet das Bit an der Stelle n in der Bitmaske darüber, ob der Job tatsächlich ausgeführt wird oder nicht. Beim nächsten mal entscheidet dann das Bit an der Stelle n+1 etc. Die Bitmaske ist ein Mittel, um sicherzustellen, dass zeitintensive Jobs nie direkt nach einem anderen zeitintensiven Jobs ausgeführt werden: Indem sie den identischen Divisor haben (oder ein ganzzahliges Mehrfaches des anderen Divisors) und im Bitmuster keine einsen an den selben Stellen zu finden sind, wird der Job niemals innerhalb des gleichen Scheduler Aufrufs ausgeführt.
+
+
+Sensor Vorverarbeitung
+Die letzten n Werte werden in einem Array gespeichert, da die Datenauswertung den Wertverlauf über eine Zeit benötigt. Zuerst wird as Array um eine Stelle kopiert, so dass der älteste Wert durch den zweitältesten Wert überschrieben wird etc. Der Sensor wird gelesen und der gelesene Wert geglättet und als neuester Wert ins Array geschrieben. Die Glättung erfolgt, indem nur ein Tei der Differenz zwischen dem letzten gespeicherten Wert im Array und dem aktuell gemessenen Wert addiert wird zum zuletzt gespeicherten Wert.
+
+
+Datenanalyse
+Aus den geglätteten Samples wird die Grundfrequenz und Amplitude (peak to peak) bestimmt. Die Amplitude entspricht der Differenz des minimalen zum maximalen Wert des Arrays. Ermittlung der Frequenz:  
+
+
+
+
