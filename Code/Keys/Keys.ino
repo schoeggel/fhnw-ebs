@@ -6,7 +6,7 @@ Serial.begin(9600);
 
 void loop() {
   // put your main code here, to run repeatedly:
-int keyvalue = analogRead(6);
+unsigned keyvalue = analogRead(6);
 if(100<keyvalue&&keyvalue<150){
   key=1;}
 if(550<keyvalue&&keyvalue<600){
