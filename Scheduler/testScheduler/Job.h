@@ -1,5 +1,5 @@
-#ifndef __SCHEDULER
-#define __SCHEDULER
+#ifndef __JOB
+#define __JOB
 #include <Arduino.h>
 
 
@@ -18,22 +18,5 @@ public:
   int dividerCounter;
 
 };
-
-
-
-class JobController {
-
- public:
-  JobController();
-  void check();  
-  void stop(int jobnr);
-  void start(int jobnr);
-  void init();
- 
- private:
-  Job Jobs[4];
-  int test;
-};
-
 
 #endif

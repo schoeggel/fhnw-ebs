@@ -1,5 +1,5 @@
-#ifndef __SCHEDULER
-#define __SCHEDULER
+#ifndef __JOBCONTROLLER
+#define __JOBCONTROLLER
 #include <Arduino.h>
 #include "Job.h"
 
