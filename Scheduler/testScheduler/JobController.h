@@ -8,13 +8,18 @@ class JobController {
  public:
   JobController();
   void check();  
-  void stop(int jobnr);
-  void start(int jobnr);
-  void init();
+  void stopjob(int jobnr);
+  void startjob(int jobnr);
+  void enable();
+  void disable();
+  void init(int jobnr, int cycleConfigPattern, int divider, int exe);
  
  private:
-  Job Jobs[4];
+  Job jobs[4];
   int test;
+  int instances;
+  bool active;
+
 };
 
 
