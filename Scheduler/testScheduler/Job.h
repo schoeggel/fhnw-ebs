@@ -4,21 +4,21 @@
 
 
 class Job{
-   friend class JobController;
+   //friend class JobController;
 
 public:
   Job();
   bool now();
   void stop();
   void start();
-  void init(int cycleConfigPattern, int divider, int exe);
+  void init(int cycleConfigPattern, int divider,void (*exe)());
 
   int cycleConfigPattern;
   int cylceCounter;
   bool jobEnabled;
   int divider;
   int dividerCounter;
-  int exe;
+  void (*exe)();
 
 };
 

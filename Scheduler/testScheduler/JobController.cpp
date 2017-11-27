@@ -8,6 +8,11 @@ JobController::JobController()
   active = false;
 }
 
+
+void JobController::init(int jobnr, int cycleConfigPattern, int divider, void (*exe)()){
+    jobs[jobnr].init(cycleConfigPattern, divider, exe);
+}
+
 void JobController::startjob(int jobnr)
 {
   jobs[jobnr].start();
@@ -28,11 +33,23 @@ void JobController::disable(){
 }
 
 void JobController::check(){
-  if (~active) {return;}
-  
+  static int callcounter = 0;
+  callcounter++;
+  if (active == false) {return;}
   ++instances;
   if (instances > 1) {
     Serial.println("More than one instance running!");
+  } else{
+    Serial.print("Jobcontroller::check() called ");
+    Serial.print(callcounter);
+    Serial.print(" times. \n");
+  }
+
+  
+  for (int jobnr = 0; jobnr < 4; jobnr++){
+    if (jobs[jobnr].now()) {
+      jobs[jobnr].exe();
+    }
   }
   
   
@@ -40,12 +57,4 @@ void JobController::check(){
   --instances;
 }
 
-
-//TODO 'int exe' --> type noch ändern auf function pointer!
-void JobController::init(int jobnr, int cycleConfigPattern, int divider, int exe){
-    // Die Jobs können nicht hardcodiert werden, weil von hier aus die auszuführenden Funktionen nicht sichtbar sind.
-    // Es muss mit den im Unterricht gezeigten Function pointer gearbeitet werden ! Der init reicht die argumente an den 
-    // über jobnr angepsrochenen job.init() weiter
-    jobs[jobnr].init(cycleConfigPattern, divider, exe);
-}
 

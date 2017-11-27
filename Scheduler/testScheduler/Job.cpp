@@ -7,11 +7,11 @@ Job::Job()
     jobEnabled = false;
     divider = 1;
     dividerCounter = 0;
-    exe = 0;
+    //exe = init;
   }
 
 
-void Job::init(int cycleConfigPattern, int divider, int exe){
+void Job::init(int cycleConfigPattern, int divider, void (*exe)()){
   this->cycleConfigPattern = cycleConfigPattern;
   this->divider = divider;
   this->exe = exe;

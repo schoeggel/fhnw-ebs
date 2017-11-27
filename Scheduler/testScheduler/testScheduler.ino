@@ -8,21 +8,41 @@
 // Wenn alle Jobs initialisiert sind, muss der Kontroller aktiviert werden mit .enable(); und danach
 // über einen TimerInterrupt zyklisch aufgerufen werden über die .check() methode.
 
-
 #include "JobController.h"
 
 JobController scheduler;
 
+
+
+
+// Die auszuführenden Aktionen. Werden vom Scheduler immer ohne Argumente aufgerufen!
+void exe1(){
+  Serial.println("exe 1 called.");
+}
+
+void exe2(){
+  Serial.println("exe 2 called.");
+}
+
+void exe3(){
+  Serial.println("exe 3 called.");
+}
+
+
+
+
 void setup() {
-  // Jobs initialisieren: jobnr, cycleConfigPattern, Divider, dummie):
+// Jobs initialisieren: jobnr, cycleConfigPattern, Divider, dummie):
 // jobs sind nach init() automatisch aktiv, scheduler läuft aber noch nicht.
-scheduler.init(0, 0b1111111111111111, 1, 0);
-scheduler.init(1, 0b0000000000000001, 12, 99);
-scheduler.init(2, 0b0001000100010001, 2, 32);
-scheduler.enable();
+  scheduler.init(0, 0b1111111111111111, 1, exe1);
+  scheduler.init(1, 0b0000000000000001, 9, exe2);
+  scheduler.init(2, 0b0001000100010001, 2, exe3);
+  scheduler.enable();
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
 scheduler.check();
 }
+
+

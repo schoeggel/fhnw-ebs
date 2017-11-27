@@ -12,7 +12,7 @@ class JobController {
   void startjob(int jobnr);
   void enable();
   void disable();
-  void init(int jobnr, int cycleConfigPattern, int divider, int exe);
+  void init(int jobnr, int cycleConfigPattern, int divider, void (*exe)());
  
  private:
   Job jobs[4];
