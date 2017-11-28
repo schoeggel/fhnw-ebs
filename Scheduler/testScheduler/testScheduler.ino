@@ -34,10 +34,12 @@ void exe3(){
 void setup() {
 // Jobs initialisieren: jobnr, cycleConfigPattern, Divider, dummie):
 // jobs sind nach init() automatisch aktiv, scheduler läuft aber noch nicht.
-  scheduler.init(0, 0b1000000000000000, 1, exe1);
+  scheduler.init(0, 0b1111111111111111, 2, exe1);
   scheduler.init(1, 0b0000000000000001, 1, exe2);
   scheduler.init(2, 0b0100000000000001, 1, exe3);
   scheduler.enable();
+  delay(2000);
+  Serial.println("Starting scheduler test...");
 }
 
 void loop() {

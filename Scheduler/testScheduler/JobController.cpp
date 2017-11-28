@@ -6,7 +6,7 @@ JobController::JobController()
 {
   // Neu erstellter Scheduler/JobController ist immer inaktiv!
   active = false;
-  cycleCounter = 0;
+  cycleCounter = 16;
 }
 
 
@@ -37,10 +37,10 @@ void JobController::check(){
   static int callcounter = 0;
   if (active == false) {return;}
   
-  if (cycleCounter > 14) {
-    cycleCounter = 1;
+  if (cycleCounter < 1) {
+    cycleCounter = 15;
   }else {
-    ++cycleCounter;
+    --cycleCounter;
   }
  
   callcounter++;
