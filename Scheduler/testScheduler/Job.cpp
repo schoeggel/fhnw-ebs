@@ -30,11 +30,11 @@ void Job::start(){
 }
 
   
-bool Job::now(){
+bool Job::now(int cycleCounter){
   // checken, ob bit an der Stelle "cylceCounter" gesetzt ist
   
-  if (cylceCounter > 15) {return false;}
-  uint8_t bit = (cycleConfigPattern >> cylceCounter) & 1;
+  if (cycleCounter > 15) {return false;}
+  uint8_t bit = (cycleConfigPattern >> cycleCounter) & 1;
   if ((bit == 1) && (jobEnabled == true)) {
 
     // Divider noch berücksichtigen:

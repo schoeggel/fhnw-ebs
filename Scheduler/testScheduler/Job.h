@@ -8,18 +8,17 @@ class Job{
 
 public:
   Job();
-  bool now();
+  bool now(int cycleCounter);
   void stop();
   void start();
   void init(int cycleConfigPattern, int divider,void (*exe)());
+  void (*exe)();
 
+private:
   int cycleConfigPattern;
-  int cylceCounter;
   bool jobEnabled;
   int divider;
   int dividerCounter;
-  void (*exe)();
-
 };
 
 #endif

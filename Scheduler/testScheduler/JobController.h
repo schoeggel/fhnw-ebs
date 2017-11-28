@@ -19,6 +19,7 @@ class JobController {
   int test;
   int instances;
   bool active;
+  int cycleCounter;
 
 };
 

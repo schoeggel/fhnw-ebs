@@ -6,6 +6,7 @@ JobController::JobController()
 {
   // Neu erstellter Scheduler/JobController ist immer inaktiv!
   active = false;
+  cycleCounter = 0;
 }
 
 
@@ -34,8 +35,15 @@ void JobController::disable(){
 
 void JobController::check(){
   static int callcounter = 0;
-  callcounter++;
   if (active == false) {return;}
+  
+  if (cycleCounter > 14) {
+    cycleCounter = 1;
+  }else {
+    ++cycleCounter;
+  }
+ 
+  callcounter++;
   ++instances;
   if (instances > 1) {
     Serial.println("More than one instance running!");
@@ -47,7 +55,7 @@ void JobController::check(){
 
   
   for (int jobnr = 0; jobnr < 4; jobnr++){
-    if (jobs[jobnr].now()) {
+    if (jobs[jobnr].now(cycleCounter)) {
       jobs[jobnr].exe();
     }
   }
