@@ -23,6 +23,7 @@ Die letzten n Werte werden in einem Array gespeichert, da die Datenauswertung de
 
 
 Datenanalyse
+Die Datenanalyse benötigt Daten auseiner eher grösseren Periode, bspw. 1 Sekunde.
 Aus den geglätteten Samples wird die Grundfrequenz und Amplitude (peak to peak) bestimmt. Die Amplitude entspricht der Differenz des minimalen zum maximalen Wert des Arrays. Ermittlung der Frequenz:  
 
 
