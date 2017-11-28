@@ -7,7 +7,6 @@ Job::Job()
     jobEnabled = false;
     divider = 1;
     dividerCounter = 0;
-    //exe = init;
   }
 
 

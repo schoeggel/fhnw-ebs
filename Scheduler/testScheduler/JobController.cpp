@@ -2,11 +2,24 @@
 #include "JobController.h"
 
 
+void safeDeadMode(void){
+  // stoppt alle Vorgänge, meldet über Serial den safe mode
+  noInterrupts();
+
+  while (true) {
+    Serial.println("Safe dead mode entered.");
+    delay(1000);
+  }
+}
+
+
+
 JobController::JobController()
 {
   // Neu erstellter Scheduler/JobController ist immer inaktiv!
   active = false;
   cycleCounter = 16;
+  instances = 0;
 }
 
 
@@ -44,9 +57,15 @@ void JobController::check(){
   }
  
   callcounter++;
+  Serial.print("Instances: ");
+  Serial.print(instances);
+  Serial.print(" --> ");
   ++instances;
+  Serial.println(instances); 
+  
   if (instances > 1) {
     Serial.println("More than one instance running!");
+    safeDeadMode();
   } else{
     Serial.print("Jobcontroller::check() called ");
     Serial.print(callcounter);

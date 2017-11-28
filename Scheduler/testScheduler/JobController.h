@@ -17,10 +17,9 @@ class JobController {
  private:
   Job jobs[4];
   int test;
-  int instances;
   bool active;
   int cycleCounter;
-
+  int instances;
 };
 
 
