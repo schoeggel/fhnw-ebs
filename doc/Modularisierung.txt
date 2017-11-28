@@ -24,7 +24,24 @@ Die letzten n Werte werden in einem Array gespeichert, da die Datenauswertung de
 
 Datenanalyse
 Die Datenanalyse benötigt Daten auseiner eher grösseren Periode, bspw. 1 Sekunde.
-Aus den geglätteten Samples wird die Grundfrequenz und Amplitude (peak to peak) bestimmt. Die Amplitude entspricht der Differenz des minimalen zum maximalen Wert des Arrays. Ermittlung der Frequenz:  
+Aus den geglätteten Samples wird die Grundfrequenz und Amplitude (peak to peak) bestimmt. Die Amplitude entspricht der Differenz des minimalen zum maximalen Problem: Daten werden laufen aktualisiert, Frequenz errechnung läuft, sobald Zeit vorhanden (falls sie nicht mit mit einem Job erledigt werden kannn)
+D.h. während der Analyse wird unterbrochen und inputdaten werden katualisiert, das wird die Analyse verfälschen oder komplett ungültig machen. Lösung: bit wird gesetzt "neue Daten". Am Ende der Analyse wird das Ergebnis nur übernommen, wenn das bit leer ist.Ansosnten bit clearen.
+
+
+Wert des Arrays. Ermittlung der Frequenz:  
+fmin = 0.5 Hz; fmax = 5 Hz
+
+TframeMin = Tfmin = 2 s
+fsmin = 2*fmax = 2*5 Hz = 10 Hz, besser 30 Hz machen
+
+30Hz * 2s = 60 Samples. 
+30Hz = 1/30 Sekunden Job Intervall
+Grundintervall Scheduler = 1 ms
+1ms * Divider 33 --> JobIntervall = 0.0303 ms => fsample = 30.3 Hz
+
+
+
+
 
 
 

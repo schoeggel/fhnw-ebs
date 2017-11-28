@@ -1,0 +1,19 @@
+28.11.2017: lightsensor
+1000 x lightsensor.update() mit jedesmal shiften bei einem buffer von 64: 192ms
+pro run: 0.2 ms
+
+
+mit buffer von 128:
+251 ms --> pro run ~ 0.25 ms
+
+
+mit deaktivierter (leerer) shift-funktion: 138 ms (entspricht buffer = 0)
+
+
+ohne buffer und ohne TP-Filterung:
+112 ms
+
+
+
+
+==================================================================================

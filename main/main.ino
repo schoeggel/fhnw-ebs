@@ -33,9 +33,9 @@ void setup() {
 // gleichen pattern gestartet werden (nach den kurzen jobs), im nächsten Pattern
 // wird leer gelassen, kein Job läuft = Kontrollierte Überlappung.
 
-  scheduler.init(0, 0b0101010101010101, 2, exe1);
-  scheduler.init(1, 0b0000000000000000, 1, exe2);
-  scheduler.init(2, 0b0100000000000000, 1, exe3);
+  scheduler.init(0, 0b1000000000000000, 2, exe1);  // ca 30 Hz
+  scheduler.init(1, 0b0000000000000000,  1, exe2);
+  scheduler.init(2, 0b0100000000000000,  1, exe3);
 
   Timer3.initialize(1000);
   Timer3.attachInterrupt(ISR_scheduler); // 
