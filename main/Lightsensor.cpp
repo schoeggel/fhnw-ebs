@@ -10,7 +10,7 @@ data[size-1]: ältester Wert.
 
 
 Lightsensor::Lightsensor(){
-	for (int  i = 0; i < size; i++){
+	for (int  i = 0; i < LBUFFERSIZE; i++){
 		data[i] = 127;
 	}
 }
@@ -20,7 +20,7 @@ void Lightsensor::update(){
 	 static double precise_data0 = 127;   // wegen filterung, damit der wert nicht "hängen" bleiben kann. 
 	 
 	 shiftdata();				              // ein Sample schieben, damit Platz für neues
-	 data[0] = analogRead(5);         // is the value read from analog pin 5
+	 data[0] = (analogRead(5)>>2);         //  value read from analog pin 5 (max 1024) durch 4 teilen --> uint8_t
    
    int delta = data[0] - data[1];
    precise_data0 = precise_data0 + FILTER_K * delta;
@@ -30,7 +30,7 @@ void Lightsensor::update(){
 
 void Lightsensor::shiftdata(){
 	// kopiert die daten um ein sample. das älteste Sample wird vom zweitältesten überschrieben etc.
-	int i = size -1;
+	int i = LBUFFERSIZE -1;
   while (i > 0) { // i = 0 geht nicht mehr: data[0] = data[-1] :-(
 		data[i] = data[i-1];
     --i;

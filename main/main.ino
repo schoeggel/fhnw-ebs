@@ -2,6 +2,7 @@
 #include "JobController.h"
 #include "Lightsensor.h"
 
+char text[10] = "1234567890";
 
 JobController scheduler;
 Lightsensor light;
