@@ -17,11 +17,9 @@ Lightsensor::Lightsensor(){
 
 
 void Lightsensor::update(){
-	 static double precise_data0 = 127;   // wegen filterung, damit der wert nicht "hängen" bleiben kann. 
-	 
-	 shiftdata();				              // ein Sample schieben, damit Platz für neues
-	 data[0] = (analogRead(5)>>2);         //  value read from analog pin 5 (max 1024) durch 4 teilen --> uint8_t
-   
+	 static double precise_data0 = 127;                 // wegen filterung, damit der wert nicht "hängen" bleiben kann. 
+	 shiftdata();				                                // ein Sample schieben, damit Platz für neues
+	 data[0] = (analogRead(5)>>2);                      //  value read from analog pin 5 (max 1024) durch 4 teilen --> uint8_t
    int delta = data[0] - data[1];
    precise_data0 = precise_data0 + FILTER_K * delta;
    data[0] = precise_data0;
