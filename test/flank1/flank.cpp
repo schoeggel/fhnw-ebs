@@ -69,37 +69,39 @@ void Flank::findMedian(){
                 }
         }
     }
-Serial.println("SORTET --------------------->>>>>");
-printTn();
-
+//Serial.println("SORTET --------------------->>>>>");
+//printTn();
+/*
 Serial.print(tn[15]);
 Serial.print(",");
 Serial.print(tn[16]);
 Serial.print(",");
 Serial.print(tn[17]);
+*/
 
 double med = ( 0.5*(tn[15] + tn[17]) + tn[16]) / 2;
+freq = 0.5*fs/med;
+/*
 Serial.print("med 3xGEW = ");
 Serial.println(med, 4);
 Serial.print("fs = ");
 Serial.println(fs);
-freq = 0.5*fs/med;
 Serial.print("detected frequency = ");
 Serial.println(freq, 6);
-
+*/
 
 }
 
 void Flank::calculate(int8_t * data){
-   Serial.println(".calculate()");
+ //  Serial.println(".calculate()");
   clearTn();
-  printTn();
+  //printTn();
   findFlanks(data);
   findExtrema(data);
   findMedian(); 
 
-  Serial.println("tn afer computation:");
-  printTn();
+ // Serial.println("tn afer computation:");
+ // printTn();
  
 }
 
@@ -116,7 +118,7 @@ void Flank::findFlanks(int8_t * v){
    * erste Hälfte des Arrays tn[].
   */
 
-  ::printArray(v, "vdat:", 64);
+  //::printArray(v, "vdat:", 64);
   
   int k = 0;
   uint8_t dir = 0;      // Richtung undefiniert
@@ -129,7 +131,7 @@ void Flank::findFlanks(int8_t * v){
 // vektor absuchen nach flanke bis vektor fertig oder bis 16 flanken gefunden.
   uint16_t bincounter = 0;
   for (int i = 1; (i < LBUFFERSIZE) && (k < (LBUFFERSIZE / 4)); i++){
-
+/*
   Serial.println();
   Serial.print("Direction = ");
   Serial.print(dir);
@@ -138,23 +140,23 @@ void Flank::findFlanks(int8_t * v){
   Serial.print(",");
   Serial.print(v[i-1]);
   Serial.print("\tCheck:\t");
-  
+  */
     ++bincounter;
     if ( (dir == DIR_UP) && (v[i] > 0) && (v[i-1] <= 0) ){    // steigend durch Nullachse
         tn[k] = bincounter;
         ++k;
         bincounter = 0;        
         dir = DIR_DOWN;
-        Serial.print("Case 1");
+       // Serial.print("Case 1");
         
       } else if ( (dir == DIR_DOWN) && (v[i] <= 0) && (v[i-1] > 0) ){    // sinkend durch Nullachse
         tn[k] = bincounter;
         ++k;
         bincounter = 0;        
         dir = DIR_UP;
-        Serial.print("Case 2");
+      //  Serial.print("Case 2");
       } else{
-        Serial.print("None");
+      //  Serial.print("None");
       }
   }    
  }
@@ -182,7 +184,7 @@ void Flank::findExtrema(int8_t * v){
     dir = DIR_DOWN;
   }
  
-Serial.print("\n\n******************** FIND EXTREMA *************");
+//Serial.print("\n\n******************** FIND EXTREMA *************");
 // vektor absuchen nach peaks bis vektor fertig oder bis 16 peaks gefunden.
   uint16_t bincounter = 0;
   int8_t delta = 0;
@@ -191,7 +193,7 @@ Serial.print("\n\n******************** FIND EXTREMA *************");
     delta = v[i] - v[i-1];
    
     if (k>LBUFFERSIZE/4){                                                   // Falls schon mind. ein Peak gefunden wurde
-        Serial.print("LastPeak v[tn[");
+     /*   Serial.print("LastPeak v[tn[");
         Serial.print(k-1);
         Serial.print("]]=");
         Serial.print(v[tn[k-1]]);
@@ -199,28 +201,30 @@ Serial.print("\n\n******************** FIND EXTREMA *************");
         Serial.print(LHYSTERESIS);
         Serial.print("\tv[i]=");
         Serial.println(v[i]);
+*/
 
       if ( dir == DIR_UP ){  
         if  (( v[tn[k-1]] + LHYSTERESIS < v[i] ) ){       // steigend hysterese verlassen  
           withinHysteresis = false;
-          Serial.println("hyscheck Case 1");
+        //  Serial.println("hyscheck Case 1");
         } 
         else {
           withinHysteresis = true;
-          Serial.println("hyscheck Case 2");
+         // Serial.println("hyscheck Case 2");
         }
       } 
       else { // dir = down
         if  (( v[tn[k-1]] - LHYSTERESIS > v[i] ) ){      // sinkend hysterese verlassen  
           withinHysteresis = false;
-          Serial.println("hyscheck Case 3");
+         // Serial.println("hyscheck Case 3");
         } else{
           withinHysteresis = true;
-          Serial.println("hyscheck Case 4");
+         // Serial.println("hyscheck Case 4");
         }
       }
     }
-    
+
+    /*
   Serial.print("[k]=");
   Serial.print(k);
   Serial.print("\tDirection = ");
@@ -232,25 +236,26 @@ Serial.print("\n\n******************** FIND EXTREMA *************");
   Serial.print(",");
   Serial.print(delta);
   Serial.print("\tCheck:\t");
+  */
   
     if ( (dir == DIR_UP) && (delta < 0) && (withinHysteresis == false)){    // wendepunkt oben gefunden
         tn[k] = bincounter;
         ++k;
         bincounter = 0;        
         dir = DIR_DOWN;
-        Serial.print("Case 1\n");
+      // Serial.print("Case 1\n");
         
       } else if ( (dir == DIR_DOWN) && (delta > 0) && (withinHysteresis == false)){    // wendepunkt unten gefunden
         tn[k] = bincounter;
         ++k;
         bincounter = 0;        
         dir = DIR_UP;
-        Serial.print("Case 2\n");
+      //  Serial.print("Case 2\n");
       } else{
-                Serial.print("Case none\n");
+        //        Serial.print("Case none\n");
       }
   }    
-  Serial.println();
+ // Serial.println();
  }
 
 
