@@ -16,6 +16,14 @@ Lightsensor::Lightsensor(){
 }
 
 
+void Lightsensor::printdata(void){
+  Serial.println("Lightsensor.data[]:");
+  for (int i=0; i < LBUFFERSIZE; i++){
+    Serial.println(data[i]);  
+  }
+  Serial.println("Lightsensor.data[] --- END ---");
+}
+
 void Lightsensor::update(){
 	 static double precise_data0 = 127;                 // wegen filterung, damit der wert nicht "hängen" bleiben kann. 
 	 shiftdata();				                                // ein Sample schieben, damit Platz für neues

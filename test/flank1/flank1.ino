@@ -2,7 +2,7 @@
 #include <TimerThree.h>
 #include "JobController.h"
 #include "Lightsensor.h"
-#include "flank.h";
+#include "flank.h"
 
 
 JobController scheduler;
@@ -13,15 +13,26 @@ int8_t vdat[LBUFFERSIZE];
 
 // Die auszuführenden Aktionen. Werden vom Scheduler immer ohne Argumente aufgerufen!
 void exe1(){   
-  //Serial.print("data[0] = ");
-  //Serial.println(light.data[0]);
-  //Serial.println("*");
+  Serial.print("data[0] = ");
+  Serial.println(light.data[0]);
+  Serial.println("*");
   light.update();
 }
 
 void exe2(){
+  Serial.println("exe2");
+    light.printdata();
+
   light.removeDC(light.data, vdat);
+   Serial.println("------------------------------------");
+   light.printdata();
+
+   //printArray(light.data, "light data from EXE2", 64);
+    printArray(vdat, "vdat from EXE2", 64);
+
   flank.calculate(vdat);
+  printArray(vdat, "vdat after calc", 64);
+        return; 
 }
 
 

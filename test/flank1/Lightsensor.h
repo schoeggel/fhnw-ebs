@@ -11,7 +11,9 @@ class Lightsensor {
 		uint8_t data[LBUFFERSIZE];
     void removeDC(uint8_t * src, double * dst);
     void removeDC(uint8_t * src, int8_t * dst);
+    void printdata(void);
 
+    
    private:
    void shiftdata();
 };
