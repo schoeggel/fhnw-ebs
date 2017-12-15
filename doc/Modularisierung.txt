@@ -26,6 +26,25 @@ Datenanalyse
 Die Datenanalyse benötigt Daten auseiner eher grösseren Periode, bspw. 1 Sekunde.
 Aus den geglätteten Samples wird die Grundfrequenz und Amplitude (peak to peak) bestimmt. Die Amplitude entspricht der Differenz des minimalen zum maximalen Problem: Daten werden laufen aktualisiert, Frequenz errechnung läuft, sobald Zeit vorhanden (falls sie nicht mit mit einem Job erledigt werden kannn)
 D.h. während der Analyse wird unterbrochen und inputdaten werden katualisiert, das wird die Analyse verfälschen oder komplett ungültig machen. Lösung: bit wird gesetzt "neue Daten". Am Ende der Analyse wird das Ergebnis nur übernommen, wenn das bit leer ist.Ansosnten bit clearen.
+================
+fft funktionierte nach test unzuverlässig. problematisch ist die frequenzauflösung, wenn in jedem fall nur die grundwelle gefunden werden soll. ==> neuer Ansatz mit Flankenerkennung: im Signal werden die wechselnden Nulldurchgänge und auch die Min und Max Werte (Peaks) erkannt.
+1. DC Offset wird rausgerechnet. uint8 auf int8 cast: wertebereich muss vorgängig begrenzt werden.
+2. Nulldurchgänge werden gesucht. Auf einen steigenden Durchgang muss ein sinkender folgend etc. Die Abstände zwischen den Nulldurchgängen werden gespeichert.
+3. Peaks werden gesucht. Auf einen Max. muss ein Min folgen. Die Werte müssen mindestens den Hysterese-Abstand zwischeneinander haben. Die Abstände werden gespeichert.
+4. Abstände werden sortiert.
+5. Eine Art Median der Abstände wird ermittelt. Mittelwert der 3 zentralen Werte, wobei der mittlere doppelt gewichtet wird.
+6. Umrechnen in eine Frequenz (ist aktuell die Periodendauer einer Halbwelle in Anzahl samples)
+7. Offen: plausibilitätscheck, ansonsten alte frequenz unverändert lassen
+8. Offen: LP Filter auf Frequenz legen.
+
+
+
+
+
+
+
+
+
 
 
 Wert des Arrays. Ermittlung der Frequenz:  

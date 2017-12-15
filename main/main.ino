@@ -1,15 +1,23 @@
 #include <TimerThree.h>
 #include "JobController.h"
 #include "Lightsensor.h"
+#include "flank.h"
 
 JobController scheduler;
 Lightsensor light;
+Flank flank = Flank(30.0);
+
 
 // Die auszuführenden Aktionen. Werden vom Scheduler immer ohne Argumente aufgerufen!
 void exe1(){   
-  Serial.print("data[0] = ");
-  Serial.println(light.data[0]);
+  //Serial.print("data[0] = ");
+  //Serial.println(light.data[0]);
   light.update();
+  flank.calculate(light.data);
+  Serial.print(flank.frequencyraw());
+  Serial.print(",");
+  Serial.println(flank.frequency());
+  
 }
 
 void exe2(){

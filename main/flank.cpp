@@ -6,7 +6,6 @@
 #define DIR_UP 0x01
 #define DIR_DOWN 0x02
 
-  
 void printArray(int8_t * v, char * title, uint8_t len){
   Serial.println(title);
     for (int i = 0; i < len; i++){
@@ -16,10 +15,9 @@ void printArray(int8_t * v, char * title, uint8_t len){
   Serial.print(" --- End ---\n");
 }
 
-
 Flank::Flank(double samplefrequency){
-  freq = {0,0,0};
-  
+  freq = {1,1,1};
+  quality = 0;
   fs = samplefrequency;
   clearTn();
 }
@@ -27,6 +25,12 @@ Flank::Flank(double samplefrequency){
 double Flank::frequency(void){
   return(freq.processed);
 }
+
+double Flank::frequencyraw(void){
+  return(freq.raw);
+}
+
+
 
 
 
@@ -41,7 +45,7 @@ void Flank::printTn(){
 }
 
 void Flank::clearTn(){
-  // So kann auch bei nur teilweise befülltem tn mit dem median gearbeitet werden. Ausser wenn nur ein tn wert befüllt ist....
+  // So kann auch bei nur teilweise befülltem tn mit dem median gearbeitet werden. Ausser wenn nur ein tn wert befüllt ist...
   for (int i = 0; i < LBUFFERSIZE/2; i++){ // condition (i<BUFFERSIZE) überschreibt anderen speicher :-)
     tn[i] = LBUFFERSIZE-1;
     i++;
@@ -79,7 +83,10 @@ Serial.print(tn[17]);
 */
 
 double med = ( 0.5*(tn[15] + tn[17]) + tn[16]) / 2;
+//freq.raw = med;
 freq.raw = 0.5*fs/med;
+
+
 /*
 Serial.print("med 3xGEW = ");
 Serial.println(med, 4);
@@ -94,18 +101,34 @@ Serial.println(freq, 6);
 void Flank::calculate(int8_t * data){
  //  Serial.println(".calculate()");
   clearTn();
+  quality = 0;
   //printTn();
   findFlanks(data);
   findExtrema(data);
   findMedian(); 
+  quality =  quality / 64; // qualität ist immer tiefer bei tieferen frequenzen.
+  
+  Serial.println();
+  Serial.print(quality, 6);
+  Serial.print(",");
+  Serial.print(freq.lastvalid);
+  Serial.print(",");
+  Serial.println(freq.processed);
+  Serial.println();
+ 
+ // Serial.println("tn afer computation:");
+ // printTn();
 
   // erkannete Frequenz plausibel ?
-  if ((freq.raw > 5) && (freq.raw < 15)) {
-    freq.lastvalid = freq.raw;
+  if ((freq.raw > 0.5) && (freq.raw < 15) && (quality > 0.15)) {
+    // ja --> abhängig von der qualität nicht vollständig gewichten:
+    freq.lastvalid = freq.lastvalid + quality * (freq.raw - freq.lastvalid);
   }
 
   // filtern
   freq.processed = freq.processed + KF_FILTER * (freq.lastvalid-freq.processed);
+  //freq.processed = freq.raw;
+ 
 }
 
 
@@ -162,6 +185,7 @@ void Flank::findFlanks(int8_t * v){
       //  Serial.print("None");
       }
   }    
+  quality = k;  // anzahl erkannte flanken speichern
  }
 
 
@@ -259,6 +283,7 @@ void Flank::findExtrema(int8_t * v){
       }
   }    
  // Serial.println();
+ quality += (k-LBUFFERSIZE/4);   // anzahl erkannter peaks zu qualitiy hinzuzählen
  }
 
 
