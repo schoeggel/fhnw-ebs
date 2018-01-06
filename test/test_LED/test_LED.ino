@@ -1,16 +1,20 @@
 #include "pulselight.h"
-float fq = 10;
-float m = 0;
+#include <Arduino.h>
+float fq = 5;
+int m = 0;
 Pulselight pulselight;
+
 
 void setup() {
 pulselight.LED_setup();
+Serial.begin(9600);
 }
 
 void loop() {
 m = pulselight.LED_setfq(fq);
-pulselight.LED_update(m);
-delay(8);
+m = pulselight.LED_update(m);
+delay(125);
+Serial.println(m);
 }
 
 
