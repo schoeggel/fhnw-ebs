@@ -4,6 +4,7 @@
 #include "flank.h"
 #include "keypoll.h"
 #include "update_LCD.h"
+#include "pulselight.h"
 
 
 char displaytext[34]  = "*Test 7890123456*BratWurst01234567";
@@ -14,20 +15,24 @@ const String txtmain  = "  * Hauptmenu *   Prog 1 oder 2 ? ";
 JobController scheduler;
 Lightsensor light;
 Flank flank = Flank(30.0);
+Pulselight pulselight;
+int m = 0;
+
 
 // Die auszuführenden Aktionen. Werden vom Scheduler immer ohne Argumente aufgerufen!
 void exe1(){   
-  //Serial.print("data[0] = ");
-  //Serial.println(light.data[0]);
   light.update();
   flank.calculate(light.data);
   Serial.print(flank.frequencyraw());
   Serial.print(",");
   Serial.println(flank.frequency());
-  
 }
 
 void exe2(){
+  
+  m = pulselight.LED_setfq(flank.frequency());
+  Serial.println(m);
+  pulselight.LED_update(m);
 }
 
 void exe3(){
@@ -43,39 +48,23 @@ void ISR_scheduler(void){
 void setup() {
   LCD_setup();
   txtmain.toCharArray(displaytext,34);
-  
-// Jobs initialisieren: jobnr, cycleConfigPattern, Divider, dummie):
-// jobs sind nach init() automatisch aktiv, scheduler läuft aber noch nicht.
-// länger dauernde Jobs sollten eine höhere Nummer haben. Dann können sie im 
-// gleichen pattern gestartet werden (nach den kurzen jobs), im nächsten Pattern
-// wird leer gelassen, kein Job läuft = Kontrollierte Überlappung.
-
-  scheduler.init(0, 0b1000000000000000, 2, exe1);  // ca 30 Hz
-  scheduler.init(1, 0b0000000000000000,  1, exe2);
-  scheduler.init(2, 0b0100000000000000,  1, exe3);
-
+  pulselight.LED_setup();
   Timer1.initialize(1000);
   Timer1.attachInterrupt(ISR_scheduler); // 
-  
- /* Serial.println("Initialisazion ok.");
-  wait(1000);
-  Serial.println("Starting scheduler in 3...");
-  wait(1000);
-  Serial.println("Starting scheduler in 2...");
-  wait(1000);
-  Serial.println("Starting scheduler in 1...");
-  wait(1000);
-  scheduler.enable();
-*/
-
 }
 
 void p1(){
   // Setup
   txtp1.toCharArray(displaytext,34);
+  
+  // Jobs initialisieren: jobnr, cycleConfigPattern, Divider, dummie):
+  // jobs sind nach init() automatisch aktiv, scheduler läuft aber noch nicht.
+  // länger dauernde Jobs sollten eine höhere Nummer haben. Dann können sie im 
+  // gleichen pattern gestartet werden (nach den kurzen jobs), im nächsten Pattern
+  // wird leer gelassen, kein Job läuft = Kontrollierte Überlappung.
   scheduler.init(0, 0b1000000000000000, 2, exe1);  // ca 30 Hz
-  scheduler.init(1, 0b0000000000000000,  1, exe2);
-  scheduler.init(2, 0b0100000000000000,  1, exe3);
+  scheduler.init(1, 0b0100000000000000, 8, exe2);  // LED update
+  scheduler.init(2, 0b0010000000000000, 1, exe3);
   Serial.println("Starting Program 1...");
   scheduler.enable();
 
