@@ -22,7 +22,7 @@ float Pulselight::LED_setfq(float fq){
   return m;
   }
 
-double Pulselight::LED_update(float m) {
+void Pulselight::LED_update(float m) {
 static int richtung = 1;
 static int count = 1;
 static double intervall = 0.008;
@@ -40,7 +40,6 @@ count = count+1;
 }
 strip.setPixelColor(0,light,0,0);
 strip.show();
-return light;
 }
 
 
