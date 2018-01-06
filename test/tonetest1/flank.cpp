@@ -31,9 +31,6 @@ double Flank::frequencyraw(void){
 }
 
 
-
-
-
 void Flank::printTn(){
    Serial.println("Tn-Array:");
     for (int k = 0; k<LBUFFERSIZE/2; k++){
@@ -83,7 +80,8 @@ void Flank::calculate(int8_t * data){
   findExtrema(data);
   findMedian(); 
   quality =  quality / 64; // qualität ist immer tiefer bei tieferen frequenzen.
-  
+
+  /*
   Serial.println();
   Serial.print(quality, 6);
   Serial.print(",");
@@ -91,6 +89,7 @@ void Flank::calculate(int8_t * data){
   Serial.print(",");
   Serial.println(freq.processed);
   Serial.println();
+ */
  
  // Serial.println("tn afer computation:");
  // printTn();
@@ -99,20 +98,13 @@ void Flank::calculate(int8_t * data){
   if ((freq.raw > 0.5) && (freq.raw < 15) && (quality > 0.15)) {
     // ja --> abhängig von der qualität nicht vollständig gewichten:
     freq.lastvalid = freq.lastvalid + quality * (freq.raw - freq.lastvalid);
-  } else {
-    Serial.println("**** verwerfe ****");
-  }
+  } 
 
   // filtern
   freq.processed = freq.processed + KF_FILTER * (freq.lastvalid-freq.processed);
   //freq.processed = freq.raw;
  
 }
-
-
-
-
-
 
 
 void Flank::findFlanks(int8_t * v){
