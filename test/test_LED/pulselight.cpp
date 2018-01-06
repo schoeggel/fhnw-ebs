@@ -5,17 +5,17 @@
 #define PIN 10
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(1, PIN, NEO_GRB + NEO_KHZ800);
 
-void pulselight::LED_setup(){
+void Pulselight::LED_setup(){
 strip.begin();
 strip.show(); // Initialize all pixels to 'off'
 }
 
-float pulselight::LED_setfq(float fq){
+float Pulselight::LED_setfq(float fq){
   float m =255/(1/fq);
   return m;
   }
 
-void pulselight::LED_update(float m) {
+void Pulselight::LED_update(float m) {
 static int richtung = 1;
 static int count = 0;
 static int intervall = 0.008;

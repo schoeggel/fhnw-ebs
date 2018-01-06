@@ -3,7 +3,7 @@
 #include <Arduino.h>
 #include <Adafruit_NeoPixel.h>
 
-class pulselight {
+class Pulselight {
   public:
     void LED_setup();
     float LED_setfq(float fq);
