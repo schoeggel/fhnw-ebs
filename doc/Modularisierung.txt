@@ -8,7 +8,7 @@ Die LCD Anzeige wird grösstenteils durch die Arduino-Bibliothek «LiquidCrystal_I
 
 
 Soundmodul
-Das Soundmodul ermöglicht es, dass kontinuierlich ein Ton mit einer gewünschten Frequenz am Lautsprecher ausgegeben wird. Gleichzeitig kann auch ein Tastendruck gemeldet werden. Dabei wird während einer definierte Zeitdauer statt des kontinuierlichen Tons ein Piepston erzeugt. Weil das Soundmodul periodisch über den Scheduler aufgerufen wird, sind die Aufrufintervalle bekannt. Über einen Zähler kann die Dauer des Piepstons kontrolliert werden. Eine erneute Meldung eines Tastendrucks, bevor der vorherige Piepston zu Ende ist, setzt den Zähler wieder zurück und verlängert somit die Gesamtdauer des Piepstons. Ist er beendet, wird wieder der fortlaufende Ton mit der angegebenen Frequenz erzeugt. Die eigentliche Tonerzeugung wird von der Arduinofunktion "tone" übernommen.
+Das Soundmodul ermöglicht es, dass kontinuierlich ein Ton am Lautsprecher ausgegeben wird. Als Input wird eine Frequenz im Bereich 1 bis 10 Hz angegeben. Das Modul rechnet die angegebene Frequenz in den hörbaren Bereich um und gibt diesen Ton aus. Die eigentliche Tonerzeugung wird von der Arduinofunktion "tone" übernommen.
 
 
 KeyRead
@@ -23,19 +23,18 @@ Die letzten n Werte werden in einem Array gespeichert, da die Datenauswertung de
 
 
 Datenanalyse
-Die Datenanalyse benötigt Daten auseiner eher grösseren Periode, bspw. 1 Sekunde.
-Aus den geglätteten Samples wird die Grundfrequenz und Amplitude (peak to peak) bestimmt. Die Amplitude entspricht der Differenz des minimalen zum maximalen Problem: Daten werden laufen aktualisiert, Frequenz errechnung läuft, sobald Zeit vorhanden (falls sie nicht mit mit einem Job erledigt werden kannn)
-D.h. während der Analyse wird unterbrochen und inputdaten werden katualisiert, das wird die Analyse verfälschen oder komplett ungültig machen. Lösung: bit wird gesetzt "neue Daten". Am Ende der Analyse wird das Ergebnis nur übernommen, wenn das bit leer ist.Ansosnten bit clearen.
+Die Datenanalyse benötigt Daten aus einer eher grösseren Periode, bspw. 1 Sekunde.
+Aus den geglätteten Samples wird die Grundfrequenz und Amplitude (peak to peak) bestimmt. Die Amplitude entspricht der Differenz des minimalen zum maximalen 
 ================
-fft funktionierte nach test unzuverlässig. problematisch ist die frequenzauflösung, wenn in jedem fall nur die grundwelle gefunden werden soll. ==> neuer Ansatz mit Flankenerkennung: im Signal werden die wechselnden Nulldurchgänge und auch die Min und Max Werte (Peaks) erkannt.
+fft funktionierte nach test unzuverlässig. problematisch ist die zu niedrige frequenzauflösung bei 30 Hz Samplingrate. Die Samplingrate kann nicht beliebig erhöht werden wegen dem Speicherbedarf der Samples. Als Alternative dazu wurde eine neuer Ansatz mit Flankenerkennung gewählt: im Signal werden die wechselnden Nulldurchgänge und auch die Min und Max Werte (Peaks) erkannt.
 1. DC Offset wird rausgerechnet. uint8 auf int8 cast: wertebereich muss vorgängig begrenzt werden.
-2. Nulldurchgänge werden gesucht. Auf einen steigenden Durchgang muss ein sinkender folgend etc. Die Abstände zwischen den Nulldurchgängen werden gespeichert.
-3. Peaks werden gesucht. Auf einen Max. muss ein Min folgen. Die Werte müssen mindestens den Hysterese-Abstand zwischeneinander haben. Die Abstände werden gespeichert.
-4. Abstände werden sortiert.
+2. Nulldurchgänge werden gesucht. Auf einen steigenden Durchgang muss ein sinkender folgend etc. Die zeitlichen Abstände zwischen den Nulldurchgängen werden gespeichert.
+3. Peaks werden gesucht. Auf einen Max. muss ein Min folgen. Die Werte müssen mindestens den Hysterese-Abstand zwischeneinander haben. Die zeitlichen Abstände werden gespeichert.
+4. Die zeitlichen Abstände werden sortiert.
 5. Eine Art Median der Abstände wird ermittelt. Mittelwert der 3 zentralen Werte, wobei der mittlere doppelt gewichtet wird.
-6. Umrechnen in eine Frequenz (ist aktuell die Periodendauer einer Halbwelle in Anzahl samples)
-7. Offen: plausibilitätscheck, ansonsten alte frequenz unverändert lassen
-8. Offen: LP Filter auf Frequenz legen.
+6. Umrechnen in eine Frequenz "rawfrequency" (ist aktuell die Periodendauer einer Halbwelle in Anzahl samples)
+7. plausibilitätscheck, ansonsten wird die zuletzt als gültig erkannte Frequenz wiederverwendet.
+8. Es erfolgt eine Lowpassfilterung der Frequenz.
 
 
 
