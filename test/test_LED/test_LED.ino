@@ -13,7 +13,8 @@ Serial.begin(9600);
 void loop() {
 m = pulselight.LED_setfq(fq);
 m = pulselight.LED_update(m);
-delay(125);
+delay(0);
+m=millis();
 Serial.println(m);
 }
 
