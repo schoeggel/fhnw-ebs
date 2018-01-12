@@ -84,7 +84,7 @@ void p1(){
     }
 
     if (keypoll() == 3){
-      wait(15); 
+      wait(1); 
       if (keypoll() == 3){
         runprog = false;
       }
@@ -117,7 +117,7 @@ void p2(){
     update_LCD(displaytext);
 
     if (keypoll() == 3){
-      wait(15); 
+      wait(1); 
       if (keypoll() == 3){
         runprog = false;
       }
